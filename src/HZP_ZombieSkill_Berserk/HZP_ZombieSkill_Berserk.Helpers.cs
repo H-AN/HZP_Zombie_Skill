@@ -61,9 +61,8 @@ public class HZP_ZombieSkill_Berserk_Helpers
             state.IsBerserkActive = true;
             state.SkillEndTime = _core.Engine.GlobalVars.CurrentTime + group.Duration;
             state.CooldownEndTime = _core.Engine.GlobalVars.CurrentTime + group.Cooldown;
-            
-            _logger.LogInformation($"玩家 {playerId} 开启暴走技能，持续时间: {group.Duration}秒, 速度倍率: {group.SpeedMultiplier}, FOV: {group.Fov}");
 
+            player.SendCenter($"你开启了暴走技能! 持续:{group.Duration}秒, 倍率: {group.SpeedMultiplier}");
             EmitSoundFormPlayer(player, group.SoundStart, 1.0f);
             if (!state.IsIdleSoundRunning)
             {
@@ -73,6 +72,30 @@ public class HZP_ZombieSkill_Berserk_Helpers
             _core.Scheduler.DelayBySeconds(group.Duration, () =>
             {
                 CheckAndRestoreSkill(player, group);
+            });
+
+            if (_globals.SkillCdTimer.TryGetValue(playerId, out var oldTimer))
+            {
+                oldTimer.Cancel();
+                _globals.SkillCdTimer.Remove(playerId);
+            }
+
+            var cooldownSeconds = group.Cooldown;
+            var cts = new CancellationTokenSource();
+            _globals.SkillCdTimer[playerId] = cts;
+
+            _core.Scheduler.DelayBySeconds(cooldownSeconds, () =>
+            {
+                if (cts.IsCancellationRequested) 
+                    return;
+
+                if (player == null || !player.IsValid) 
+                    return;
+
+                player.SendCenter("你的暴走技能已经准备好了！");
+
+                // Timer 执行完后清理
+                _globals.SkillCdTimer.Remove(playerId);
             });
         }
     }
@@ -116,8 +139,7 @@ public class HZP_ZombieSkill_Berserk_Helpers
             ResetProgressBar(pawn);
             
             state.IsBerserkActive = false;
-            
-            _logger.LogInformation($"玩家 {playerId} 的暴走技能已结束，速度和FOV已恢复");
+            player.SendCenter("你的暴走技能已结束!");
         }
     }
 

@@ -59,6 +59,12 @@ public class HZP_ZombieSkill_Berserk_Service
             state.IsIdleSoundRunning = false;
         }
 
+        if (_globals.SkillCdTimer.TryGetValue(playerId, out var token))
+        {
+            token.Cancel();
+            _globals.SkillCdTimer.Remove(playerId);
+        }
+
         _globals.PlayerSkillStates.Remove(playerId);
     }
 
@@ -75,6 +81,12 @@ public class HZP_ZombieSkill_Berserk_Service
             state.SkillEndTime = currentTime;
         }
 
+        foreach (var kv in _globals.SkillCdTimer.ToList())
+        {
+            kv.Value.Cancel();
+            _globals.SkillCdTimer.Remove(kv.Key);
+        }
+
         return HookResult.Continue;
     }
     private HookResult OnRoundEnd(EventRoundEnd @event)
@@ -85,6 +97,12 @@ public class HZP_ZombieSkill_Berserk_Service
 
             state.IsBerserkActive = false;
             state.IsIdleSoundRunning = false;
+        }
+
+        foreach (var kv in _globals.SkillCdTimer.ToList())
+        {
+            kv.Value.Cancel();
+            _globals.SkillCdTimer.Remove(kv.Key);
         }
 
         return HookResult.Continue;
@@ -105,6 +123,13 @@ public class HZP_ZombieSkill_Berserk_Service
             return HookResult.Continue;
 
         var playerId = player.PlayerID;
+
+        if (_globals.SkillCdTimer.TryGetValue(playerId, out var token))
+        {
+            token.Cancel();
+            _globals.SkillCdTimer.Remove(playerId);
+        }
+
 
         if (!_globals.PlayerSkillStates.TryGetValue(playerId, out var state))
             return HookResult.Continue;
@@ -245,13 +270,14 @@ public class HZP_ZombieSkill_Berserk_Service
 
         if (state.IsBerserkActive)
         {
-            _logger.LogInformation($"玩家 {player.Name} 已经在使用暴走技能");
+            player.SendCenter("你正在使用暴走技能!");
             return;
         }
 
         if (currentTime < state.CooldownEndTime)
         {
-            _logger.LogInformation($"玩家 {player.Name} 的暴走技能还在冷却中");
+            float remaining = Math.Max(0, state.CooldownEndTime - currentTime);
+            player.SendCenter($"你的暴走技能还在冷却中!还需等待 :{remaining:F1} 秒");
             return;
         }
 

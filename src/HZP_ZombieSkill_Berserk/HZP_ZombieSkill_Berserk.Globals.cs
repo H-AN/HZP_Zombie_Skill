@@ -14,4 +14,5 @@ public class PlayerSkillState
 public class HZP_ZombieSkill_Berserk_Globals
 {
     public Dictionary<int, PlayerSkillState> PlayerSkillStates { get; set; } = new Dictionary<int, PlayerSkillState>();
+    public Dictionary<int, CancellationTokenSource> SkillCdTimer = new Dictionary<int, CancellationTokenSource>();
 }
