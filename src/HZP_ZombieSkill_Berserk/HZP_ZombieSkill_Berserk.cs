@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using ShopCore.Contract;
 using SwiftlyS2.Shared;
 using SwiftlyS2.Shared.GameEventDefinitions;
 using SwiftlyS2.Shared.GameEvents;
@@ -56,11 +55,13 @@ namespace HZP_ZombieSkill;
             .BindConfiguration("HZPZombieSkillBerserkCFG");
 
             collection.AddScoped<HZP_ZombieSkill_Berserk_Service>();
-            collection.AddScoped<HZP_ZombieSkill_Berserk_Command>();
             collection.AddScoped<HZP_ZombieSkill_Berserk_Helpers>();
             collection.AddScoped<HZP_ZombieSkill_Berserk_Globals>();
 
             ServiceProvider = collection.BuildServiceProvider();
+
+            var service = ServiceProvider.GetRequiredService<HZP_ZombieSkill_Berserk_Service>();
+            service.HookEvent();
         }
 
         public override void Unload()
