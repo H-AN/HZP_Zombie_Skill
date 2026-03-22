@@ -130,15 +130,14 @@ public class HZP_ZombieSkill_Berserk_Service
             _globals.SkillCdTimer.Remove(playerId);
         }
 
-
         if (!_globals.PlayerSkillStates.TryGetValue(playerId, out var state))
             return HookResult.Continue;
 
+        var zombieClassName = _zpApi.HZP_GetZombieClassname(player);
+        var group = _config.Groups.FirstOrDefault(g => g.Enable && g.Name == zombieClassName);
+
         if (state.IsBerserkActive)
         {
-            var zombieClassName = _zpApi.HZP_GetZombieClassname(player);
-
-            var group = _config.Groups.FirstOrDefault(g => g.Enable && g.Name == zombieClassName);
             if (group != null)
             {
                 var zombieProperties = _zpApi.HZP_GetZombieProperties(group.Name);
@@ -157,6 +156,10 @@ public class HZP_ZombieSkill_Berserk_Service
 
             state.IsBerserkActive = false;
             state.IsIdleSoundRunning = false;
+        }
+        else if (group != null && group.DeathRefresh)
+        {
+            state.CooldownEndTime = _core.Engine.GlobalVars.CurrentTime;
         }
 
         return HookResult.Continue;
@@ -270,14 +273,14 @@ public class HZP_ZombieSkill_Berserk_Service
 
         if (state.IsBerserkActive)
         {
-            player.SendCenter("你正在使用暴走技能!");
+            player.SendCenter(_helpers.T(player, "BerserkSkillActive"));
             return;
         }
 
         if (currentTime < state.CooldownEndTime)
         {
             float remaining = Math.Max(0, state.CooldownEndTime - currentTime);
-            player.SendCenter($"你的暴走技能还在冷却中!还需等待 :{remaining:F1} 秒");
+            player.SendCenter(_helpers.T(player, "BerserkSkillCooldown", remaining));
             return;
         }
 

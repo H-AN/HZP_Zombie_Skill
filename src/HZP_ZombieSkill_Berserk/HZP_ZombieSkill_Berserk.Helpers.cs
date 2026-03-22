@@ -62,7 +62,7 @@ public class HZP_ZombieSkill_Berserk_Helpers
             state.SkillEndTime = _core.Engine.GlobalVars.CurrentTime + group.Duration;
             state.CooldownEndTime = _core.Engine.GlobalVars.CurrentTime + group.Cooldown;
 
-            player.SendCenter($"你开启了暴走技能! 持续:{group.Duration}秒, 倍率: {group.SpeedMultiplier}");
+            player.SendCenter(T(player, "BerserkSkillActive", group.Duration, group.SpeedMultiplier));
             EmitSoundFormPlayer(player, group.SoundStart, 1.0f);
             if (!state.IsIdleSoundRunning)
             {
@@ -92,7 +92,7 @@ public class HZP_ZombieSkill_Berserk_Helpers
                 if (player == null || !player.IsValid) 
                     return;
 
-                player.SendCenter("你的暴走技能已经准备好了！");
+                player.SendCenter(T(player, "BerserkSkillReady"));
 
                 // Timer 执行完后清理
                 _globals.SkillCdTimer.Remove(playerId);
@@ -139,7 +139,7 @@ public class HZP_ZombieSkill_Berserk_Helpers
             ResetProgressBar(pawn);
             
             state.IsBerserkActive = false;
-            player.SendCenter("你的暴走技能已结束!");
+            player.SendCenter(T(player, "BerserkSkillEnded"));
         }
     }
 
@@ -265,5 +265,14 @@ public class HZP_ZombieSkill_Berserk_Helpers
         {
             sound.Emit();
         });
+    }
+
+    public string T(IPlayer? player, string key, params object[] args)
+    {
+        if (player == null || !player.IsValid)
+            return string.Format(key, args);
+
+        var localizer = _core.Translation.GetPlayerLocalizer(player);
+        return localizer[key, args];
     }
 }

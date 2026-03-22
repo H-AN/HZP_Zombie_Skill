@@ -1,0 +1,6 @@
+{
+    "BerserkSkillActive": "You activated Berserk skill!\nDuration: {0} seconds, Multiplier: {1}",
+    "BerserkSkillReady": "Your Berserk skill is ready!",
+    "BerserkSkillEnded": "Your Berserk skill has ended!",
+    "BerserkSkillCooldown": "Your Berserk skill is on cooldown!\nWait: {0:F1} seconds"
+}
