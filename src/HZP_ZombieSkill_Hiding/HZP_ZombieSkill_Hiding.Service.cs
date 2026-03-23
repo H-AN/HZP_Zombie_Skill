@@ -43,7 +43,6 @@ public class HZP_ZombieSkill_Hiding_Service
     {
         _core.Event.OnClientKeyStateChanged += OnButtonChange;
         _core.Event.OnPrecacheResource += Event_OnPrecacheResource;
-        // _core.Event.OnTick += Event_OnTick;
         _core.GameEvent.HookPre<EventPlayerDeath>(OnPlayerDeath);
         _core.Event.OnClientDisconnected += Event_OnClientDisconnected;
         _core.GameEvent.HookPre<EventRoundStart>(OnRoundStart);
@@ -174,41 +173,6 @@ public class HZP_ZombieSkill_Hiding_Service
         return HookResult.Continue;
     }
 
-    /*
-    private void Event_OnTick()
-    {
-        var _zpApi = HZP_ZombieSkill_Hiding._zpApi;
-        if (_zpApi == null)
-            return;
-
-        var currentTime = _core.Engine.GlobalVars.CurrentTime;
-
-        var allplayer = _core.PlayerManager.GetAlive();
-
-        foreach (var player in allplayer)
-        {
-            if (player == null || !player.IsValid)
-                continue;
-
-            var pawn = player.PlayerPawn;
-            if (pawn == null || !pawn.IsValid)
-                continue;
-
-            var playerId = player.PlayerID;
-
-            if (!_globals.PlayerSkillStates.TryGetValue(playerId, out var state))
-                continue;
-
-            if (state.IsHidingActive && currentTime >= state.SkillEndTime)
-            {
-                _helpers.ResetProgressBar(pawn);
-                SetPlayerAlpha(pawn, 255);
-                state.IsHidingActive = false;
-            }
-        }
-    }
-    */
-
     private void SetPlayerHidingAlpha(CCSPlayerPawn pawn, int alpha)
     {
         if (pawn == null || !pawn.IsValid)
@@ -288,7 +252,7 @@ public class HZP_ZombieSkill_Hiding_Service
 
         if (state.IsHidingActive)
         {
-            player.SendCenter(_helpers.T(player, "HidingSkillActive"));
+            player.SendCenter(_helpers.T(player, "HidingSkillAlreadyActive"));
             return;
         }
 

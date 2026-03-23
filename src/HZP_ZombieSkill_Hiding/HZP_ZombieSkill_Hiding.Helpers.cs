@@ -56,7 +56,8 @@ public class HZP_ZombieSkill_Hiding_Helpers
             state.SkillEndTime = _core.Engine.GlobalVars.CurrentTime + group.Duration;
             state.CooldownEndTime = _core.Engine.GlobalVars.CurrentTime + group.Cooldown;
 
-            player.SendCenter(T(player, "HidingSkillActive", group.Duration, group.Alpha));
+            int percentage = (int)((255 - group.Alpha) * 100 / 255);
+            player.SendCenter(T(player, "HidingSkillActive", group.Duration, percentage));
             EmitSoundFormPlayer(player, group.SoundStart, 1.0f);
 
             _core.Scheduler.DelayBySeconds(group.Duration, () =>
