@@ -1,0 +1,27 @@
+{
+  "HZPZombieSkillHidingCFG": {
+    "Groups": [
+      {
+        "Enable": true,
+        "DeathRefresh": true,
+        "Name": "轻型丧尸",
+        "Duration": 20.0,
+        "Cooldown": 40.0,
+        "Alpha": 40,
+        "SoundStart": "han.zombie.skill.fempressure",
+        "PrecacheSound": "soundevents/hanzbplayerskill.vsndevts"
+      },
+      {
+        "Enable": true,
+        "DeathRefresh": true,
+        "Name": "女僵尸",
+        "Duration": 15.0,
+        "Cooldown": 35.0,
+        "Alpha": 120,
+        "SoundStart": "han.zombie.skill.fempressure",
+        "PrecacheSound": ""
+      }
+
+    ]
+  }
+}

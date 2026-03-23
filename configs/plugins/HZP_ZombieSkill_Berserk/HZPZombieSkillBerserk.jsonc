@@ -1,0 +1,30 @@
+{
+  "HZPZombieSkillBerserkCFG": {
+    "Groups": [
+      {
+        "Enable": true,
+        "DeathRefresh": true,
+        "Name": "母体僵尸",
+        "Duration": 15.0,
+        "Cooldown": 30.0,
+        "SpeedMultiplier": 1.5,
+        "Fov": 120,
+        "SoundStart": "han.zombie.skill.manpressure",
+        "SoundIdle": "han.zombie.skill.preidle,han.zombie.skill.preidleB",
+        "PrecacheSound": "soundevents/hanzbplayerskill.vsndevts"
+      },
+      {
+        "Enable": true,
+        "DeathRefresh": true,
+        "Name": "丧尸士兵",
+        "Duration": 10.0,
+        "Cooldown": 30.0,
+        "SpeedMultiplier": 0.9,
+        "Fov": 120,
+        "SoundStart": "han.zombie.skill.manpressure",
+        "SoundIdle": "han.zombie.skill.preidle,han.zombie.skill.preidleB",
+        "PrecacheSound": ""
+      }
+    ]
+  }
+}
