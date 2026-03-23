@@ -1,0 +1,16 @@
+{
+  "HZPZombieSkillHidingCFG": {
+    "Groups": [
+      {
+        "Enable": true,
+        "DeathRefresh": false,
+        "Name": "hzp_zombie_classname_example",
+        "Duration": 10.0,
+        "Cooldown": 30.0,
+        "Alpha": 50,
+        "SoundStart": "sound/path/to/start",
+        "PrecacheSound": "sound/path/to/precache"
+      }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{
+    "HidingSkillActive": "You activated Hiding skill!\nDuration: {0} seconds, Alpha: {1}",
+    "HidingSkillReady": "Your Hiding skill is ready!",
+    "HidingSkillEnded": "Your Hiding skill has ended!",
+    "HidingSkillCooldown": "Your Hiding skill is on cooldown!\nWait: {0:F1} seconds"
+}

@@ -1,0 +1,6 @@
+{
+    "HidingSkillActive": "你开启了隐身技能!\n持续 {0} 秒, 隐身程度 {1}",
+    "HidingSkillReady": "你的隐身技能已经准备好了！",
+    "HidingSkillEnded": "你的隐身技能已结束！",
+    "HidingSkillCooldown": "你的隐身技能还在冷却中！\n还需等待 {0:F1} 秒"
+}
