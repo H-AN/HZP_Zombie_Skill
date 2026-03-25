@@ -44,79 +44,65 @@ public class HZP_ZombieSkill_Hiding_Service
         _core.Event.OnClientKeyStateChanged += OnButtonChange;
         _core.Event.OnPrecacheResource += Event_OnPrecacheResource;
         _core.GameEvent.HookPre<EventPlayerDeath>(OnPlayerDeath);
+        _core.GameEvent.HookPost<EventPlayerTeam>(OnPlayerTeam);
         _core.Event.OnClientDisconnected += Event_OnClientDisconnected;
         _core.GameEvent.HookPre<EventRoundStart>(OnRoundStart);
         _core.GameEvent.HookPre<EventRoundEnd>(OnRoundEnd);
     }
 
+    private void ResetPlayerSkillForPlayerId(int playerId, bool resetCooldown = true, bool removeState = false)
+    {
+        var player = _core.PlayerManager.GetPlayer(playerId);
+        if (player != null && player.IsValid)
+        {
+            _helpers.ResetPlayerSkill(player, resetCooldown);
+        }
+        else
+        {
+            _helpers.ResetPlayerSkillState(playerId, resetCooldown);
+        }
+
+        if (removeState)
+        {
+            _globals.PlayerSkillStates.Remove(playerId);
+        }
+    }
+
+    private HookResult OnPlayerTeam(EventPlayerTeam @event)
+    {
+        if (@event.Disconnect || @event.OldTeam == @event.Team)
+            return HookResult.Continue;
+
+        var playerId = @event.UserId;
+        _core.Scheduler.NextTick(() =>
+        {
+            ResetPlayerSkillForPlayerId(playerId, removeState: true);
+        });
+
+        return HookResult.Continue;
+    }
+
     private void Event_OnClientDisconnected(IOnClientDisconnectedEvent @event)
     {
         var playerId = @event.PlayerId;
-        if (_globals.PlayerSkillStates.TryGetValue(playerId, out var state))
-        {
-            var player = _core.PlayerManager.GetPlayer(playerId);
-            if (player != null && player.IsValid && player.PlayerPawn != null && player.PlayerPawn.IsValid)
-            {
-                SetPlayerAlpha(player.PlayerPawn, 255);
-            }
-
-            state.IsHidingActive = false;
-        }
-
-        if (_globals.SkillCdTimer.TryGetValue(playerId, out var token))
-        {
-            token.Cancel();
-            _globals.SkillCdTimer.Remove(playerId);
-        }
-
+        _helpers.ResetPlayerSkillState(playerId);
         _globals.PlayerSkillStates.Remove(playerId);
     }
 
     private HookResult OnRoundStart(EventRoundStart @event)
     {
-        var currentTime = _core.Engine.GlobalVars.CurrentTime;
-
-        foreach (var kv in _globals.PlayerSkillStates)
+        foreach (var playerId in _globals.PlayerSkillStates.Keys.ToList())
         {
-            var state = kv.Value;
-            state.IsHidingActive = false;
-            state.CooldownEndTime = currentTime;
-            state.SkillEndTime = currentTime;
-
-            var player = _core.PlayerManager.GetPlayer(kv.Key);
-            if (player != null && player.IsValid && player.PlayerPawn != null && player.PlayerPawn.IsValid)
-            {
-                SetPlayerAlpha(player.PlayerPawn, 255);
-            }
-        }
-
-        foreach (var kv in _globals.SkillCdTimer.ToList())
-        {
-            kv.Value.Cancel();
-            _globals.SkillCdTimer.Remove(kv.Key);
+            ResetPlayerSkillForPlayerId(playerId, removeState: true);
         }
 
         return HookResult.Continue;
     }
     private HookResult OnRoundEnd(EventRoundEnd @event)
     {
-        foreach (var kv in _globals.PlayerSkillStates)
+        foreach (var playerId in _globals.PlayerSkillStates.Keys.ToList())
         {
-            var state = kv.Value;
-
-            state.IsHidingActive = false;
-
-            var player = _core.PlayerManager.GetPlayer(kv.Key);
-            if (player != null && player.IsValid && player.PlayerPawn != null && player.PlayerPawn.IsValid)
-            {
-                SetPlayerAlpha(player.PlayerPawn, 255);
-            }
-        }
-
-        foreach (var kv in _globals.SkillCdTimer.ToList())
-        {
-            kv.Value.Cancel();
-            _globals.SkillCdTimer.Remove(kv.Key);
+            ResetPlayerSkillForPlayerId(playerId, removeState: true);
         }
 
         return HookResult.Continue;
@@ -128,61 +114,41 @@ public class HZP_ZombieSkill_Hiding_Service
         if (player == null || !player.IsValid)
             return HookResult.Continue;
 
-        var pawn = player.PlayerPawn;
-        if (pawn == null || !pawn.IsValid)
-            return HookResult.Continue;
-
         var _zpApi = HZP_ZombieSkill_Hiding._zpApi;
         if (_zpApi == null)
             return HookResult.Continue;
 
         var playerId = player.PlayerID;
 
-        if (_globals.SkillCdTimer.TryGetValue(playerId, out var token))
-        {
-            token.Cancel();
-            _globals.SkillCdTimer.Remove(playerId);
-        }
-
         if (!_globals.PlayerSkillStates.TryGetValue(playerId, out var state))
+        {
+            _helpers.CancelCooldownTimer(playerId);
             return HookResult.Continue;
+        }
 
         var zombieClassName = _zpApi.HZP_GetZombieClassname(player);
         var group = _config.Groups.FirstOrDefault(g => g.Enable && g.Name == zombieClassName);
 
         if (state.IsHidingActive)
         {
-            if (group != null)
+            var resetCooldown = group?.DeathRefresh == true;
+            _helpers.ResetPlayerSkill(player, resetCooldown: resetCooldown);
+            if (resetCooldown)
             {
-                if (group.DeathRefresh)
-                {
-                    state.CooldownEndTime = _core.Engine.GlobalVars.CurrentTime;
-                }
+                _globals.PlayerSkillStates.Remove(playerId);
             }
-
-            _helpers.ResetProgressBar(pawn);
-            SetPlayerAlpha(pawn, 255);
-
-            state.IsHidingActive = false;
         }
         else if (group != null && group.DeathRefresh)
         {
-            state.CooldownEndTime = _core.Engine.GlobalVars.CurrentTime;
+            _helpers.ResetPlayerSkillState(playerId, resetCooldown: true);
+            _globals.PlayerSkillStates.Remove(playerId);
+        }
+        else
+        {
+            _helpers.CancelCooldownTimer(playerId);
         }
 
         return HookResult.Continue;
-    }
-
-    private void SetPlayerHidingAlpha(CCSPlayerPawn pawn, int alpha)
-    {
-        if (pawn == null || !pawn.IsValid)
-            return;
-
-        if (pawn.Render.A != (byte)alpha)
-        {
-            pawn.Render.A = (byte)alpha;
-            pawn.RenderUpdated();
-        }
     }
 
     private void SetPlayerAlpha(CCSPlayerPawn pawn, int alpha)

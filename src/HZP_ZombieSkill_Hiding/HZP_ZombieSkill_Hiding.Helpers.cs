@@ -65,11 +65,7 @@ public class HZP_ZombieSkill_Hiding_Helpers
                 CheckAndRestoreSkill(player, group);
             });
 
-            if (_globals.SkillCdTimer.TryGetValue(playerId, out var oldTimer))
-            {
-                oldTimer.Cancel();
-                _globals.SkillCdTimer.Remove(playerId);
-            }
+            CancelCooldownTimer(playerId);
 
             var cooldownSeconds = group.Cooldown;
             var cts = new CancellationTokenSource();
@@ -90,17 +86,9 @@ public class HZP_ZombieSkill_Hiding_Helpers
         }
     }
 
-    public void CheckAndRestoreSkill(IPlayer player, ZombieSkillGroup group)
+    public void CheckAndRestoreSkill(IPlayer player, ZombieSkillGroup _)
     {
         if(player == null || !player.IsValid)
-            return;
-
-        var pawn = player.PlayerPawn;
-        if(pawn == null || !pawn.IsValid)
-            return;
-
-        var _zpApi = HZP_ZombieSkill_Hiding._zpApi;
-        if (_zpApi == null)
             return;
 
         var playerId = player.PlayerID;
@@ -111,13 +99,72 @@ public class HZP_ZombieSkill_Hiding_Helpers
         if (!state.IsHidingActive)
             return;
 
-        if (state.IsHidingActive && _core.Engine.GlobalVars.CurrentTime >= state.SkillEndTime)
+        if (_core.Engine.GlobalVars.CurrentTime >= state.SkillEndTime)
         {
-            SetPlayerAlpha(pawn, 255);
-            
-            ResetProgressBar(pawn);
-            
-            state.IsHidingActive = false;
+            ResetPlayerSkill(player, resetCooldown: false, showEndMessage: true, cancelCooldownTimer: false);
+        }
+    }
+
+    public void CancelCooldownTimer(int playerId)
+    {
+        if (_globals.SkillCdTimer.TryGetValue(playerId, out var token))
+        {
+            token.Cancel();
+            _globals.SkillCdTimer.Remove(playerId);
+        }
+    }
+
+    public void ResetPlayerSkillState(int playerId, bool resetCooldown = true, bool cancelCooldownTimer = true)
+    {
+        if (cancelCooldownTimer)
+        {
+            CancelCooldownTimer(playerId);
+        }
+
+        if (!_globals.PlayerSkillStates.TryGetValue(playerId, out var state))
+            return;
+
+        var currentTime = _core.Engine.GlobalVars.CurrentTime;
+
+        state.IsHidingActive = false;
+        state.SkillEndTime = currentTime;
+        state.LastButtonPressTime = 0f;
+
+        if (resetCooldown)
+        {
+            state.CooldownEndTime = currentTime;
+        }
+    }
+
+    public void ResetPlayerSkill(IPlayer player, bool resetCooldown = true, bool showEndMessage = false, bool cancelCooldownTimer = true)
+    {
+        if (player == null || !player.IsValid)
+            return;
+
+        var playerId = player.PlayerID;
+        var hasState = _globals.PlayerSkillStates.TryGetValue(playerId, out var state);
+        if (!hasState || state == null)
+        {
+            ResetPlayerSkillState(playerId, resetCooldown, cancelCooldownTimer);
+            return;
+        }
+
+        var wasActive = state.IsHidingActive;
+
+        if (hasState)
+        {
+            var pawn = player.PlayerPawn;
+            if (pawn != null && pawn.IsValid)
+            {
+                SetPlayerAlpha(pawn, 255);
+                ResetProgressBar(pawn);
+            }
+        }
+
+        ResetPlayerSkillState(playerId, resetCooldown, cancelCooldownTimer);
+
+        if (showEndMessage && wasActive)
+        {
             player.SendCenter(T(player, "HidingSkillEnded"));
         }
     }
@@ -199,7 +246,7 @@ public class HZP_ZombieSkill_Hiding_Helpers
         return localizer[key, args];
     }
 
-    private void SetPlayerAlpha(CCSPlayerPawn pawn, int alpha)
+    public void SetPlayerAlpha(CCSPlayerPawn pawn, int alpha)
     {
         if (pawn == null || !pawn.IsValid)
             return;

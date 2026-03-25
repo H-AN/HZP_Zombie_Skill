@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".新建文件夹", ".新建文件夹", "{19337F21-B987-088F-3DC3-B2AE03D55EBA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZP_ZombieSkill_Berserk", ".新建文件夹\HZP_ZombieSkill_Berserk\HZP_ZombieSkill_Berserk.csproj", "{C07F07C9-8EF9-4D56-4688-DAC9E62B7033}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZP_ZombieSkill_Berserk", "src\HZP_ZombieSkill_Berserk\HZP_ZombieSkill_Berserk.csproj", "{681BF619-4B5F-420F-700A-168822A0C980}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HZP_ZombieSkill_Hiding", "src\HZP_ZombieSkill_Hiding\HZP_ZombieSkill_Hiding.csproj", "{1E6325AA-40C0-B2CE-7B95-A9D163E57C84}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C07F07C9-8EF9-4D56-4688-DAC9E62B7033}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C07F07C9-8EF9-4D56-4688-DAC9E62B7033}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C07F07C9-8EF9-4D56-4688-DAC9E62B7033}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C07F07C9-8EF9-4D56-4688-DAC9E62B7033}.Release|Any CPU.Build.0 = Release|Any CPU
+		{681BF619-4B5F-420F-700A-168822A0C980}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{681BF619-4B5F-420F-700A-168822A0C980}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{681BF619-4B5F-420F-700A-168822A0C980}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{681BF619-4B5F-420F-700A-168822A0C980}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E6325AA-40C0-B2CE-7B95-A9D163E57C84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E6325AA-40C0-B2CE-7B95-A9D163E57C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E6325AA-40C0-B2CE-7B95-A9D163E57C84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E6325AA-40C0-B2CE-7B95-A9D163E57C84}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C07F07C9-8EF9-4D56-4688-DAC9E62B7033} = {19337F21-B987-088F-3DC3-B2AE03D55EBA}
+		{681BF619-4B5F-420F-700A-168822A0C980} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{1E6325AA-40C0-B2CE-7B95-A9D163E57C84} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2179AC9A-1586-4703-8AAB-9B5063F1AFE5}
+	EndGlobalSection
+EndGlobal

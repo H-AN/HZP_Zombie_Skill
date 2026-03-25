@@ -45,64 +45,65 @@ public class HZP_ZombieSkill_Berserk_Service
         _core.Event.OnPrecacheResource += Event_OnPrecacheResource;
         _core.Event.OnTick += Event_OnTick;
         _core.GameEvent.HookPre<EventPlayerDeath>(OnPlayerDeath);
+        _core.GameEvent.HookPost<EventPlayerTeam>(OnPlayerTeam);
         _core.Event.OnClientDisconnected += Event_OnClientDisconnected;
         _core.GameEvent.HookPre<EventRoundStart>(OnRoundStart);
         _core.GameEvent.HookPre<EventRoundEnd>(OnRoundEnd);
     }
 
+    private void ResetPlayerSkillForPlayerId(int playerId, bool resetCooldown = true, bool removeState = false)
+    {
+        var player = _core.PlayerManager.GetPlayer(playerId);
+        if (player != null && player.IsValid)
+        {
+            _helpers.ResetPlayerSkill(player, resetCooldown);
+        }
+        else
+        {
+            _helpers.ResetPlayerSkillState(playerId, resetCooldown);
+        }
+
+        if (removeState)
+        {
+            _globals.PlayerSkillStates.Remove(playerId);
+        }
+    }
+
+    private HookResult OnPlayerTeam(EventPlayerTeam @event)
+    {
+        if (@event.Disconnect || @event.OldTeam == @event.Team)
+            return HookResult.Continue;
+
+        var playerId = @event.UserId;
+        _core.Scheduler.NextTick(() =>
+        {
+            ResetPlayerSkillForPlayerId(playerId, removeState: true);
+        });
+
+        return HookResult.Continue;
+    }
+
     private void Event_OnClientDisconnected(IOnClientDisconnectedEvent @event)
     {
         var playerId = @event.PlayerId;
-        if (_globals.PlayerSkillStates.TryGetValue(playerId, out var state))
-        {
-            state.IsBerserkActive = false;
-            state.IsIdleSoundRunning = false;
-        }
-
-        if (_globals.SkillCdTimer.TryGetValue(playerId, out var token))
-        {
-            token.Cancel();
-            _globals.SkillCdTimer.Remove(playerId);
-        }
-
+        _helpers.ResetPlayerSkillState(playerId);
         _globals.PlayerSkillStates.Remove(playerId);
     }
 
     private HookResult OnRoundStart(EventRoundStart @event)
     {
-        var currentTime = _core.Engine.GlobalVars.CurrentTime;
-
-        foreach (var kv in _globals.PlayerSkillStates)
+        foreach (var playerId in _globals.PlayerSkillStates.Keys.ToList())
         {
-            var state = kv.Value;
-            state.IsBerserkActive = false;
-            state.IsIdleSoundRunning = false;
-            state.CooldownEndTime = currentTime;
-            state.SkillEndTime = currentTime;
-        }
-
-        foreach (var kv in _globals.SkillCdTimer.ToList())
-        {
-            kv.Value.Cancel();
-            _globals.SkillCdTimer.Remove(kv.Key);
+            ResetPlayerSkillForPlayerId(playerId, removeState: true);
         }
 
         return HookResult.Continue;
     }
     private HookResult OnRoundEnd(EventRoundEnd @event)
     {
-        foreach (var kv in _globals.PlayerSkillStates)
+        foreach (var playerId in _globals.PlayerSkillStates.Keys.ToList())
         {
-            var state = kv.Value;
-
-            state.IsBerserkActive = false;
-            state.IsIdleSoundRunning = false;
-        }
-
-        foreach (var kv in _globals.SkillCdTimer.ToList())
-        {
-            kv.Value.Cancel();
-            _globals.SkillCdTimer.Remove(kv.Key);
+            ResetPlayerSkillForPlayerId(playerId, removeState: true);
         }
 
         return HookResult.Continue;
@@ -114,52 +115,38 @@ public class HZP_ZombieSkill_Berserk_Service
         if (player == null || !player.IsValid)
             return HookResult.Continue;
 
-        var pawn = player.PlayerPawn;
-        if (pawn == null || !pawn.IsValid)
-            return HookResult.Continue;
-
         var _zpApi = HZP_ZombieSkill_Berserk._zpApi;
         if (_zpApi == null)
             return HookResult.Continue;
 
         var playerId = player.PlayerID;
 
-        if (_globals.SkillCdTimer.TryGetValue(playerId, out var token))
-        {
-            token.Cancel();
-            _globals.SkillCdTimer.Remove(playerId);
-        }
-
         if (!_globals.PlayerSkillStates.TryGetValue(playerId, out var state))
+        {
+            _helpers.CancelCooldownTimer(playerId);
             return HookResult.Continue;
+        }
 
         var zombieClassName = _zpApi.HZP_GetZombieClassname(player);
         var group = _config.Groups.FirstOrDefault(g => g.Enable && g.Name == zombieClassName);
 
         if (state.IsBerserkActive)
         {
-            if (group != null)
+            var resetCooldown = group?.DeathRefresh == true;
+            _helpers.ResetPlayerSkill(player, resetCooldown: resetCooldown);
+            if (resetCooldown)
             {
-                var zombieProperties = _zpApi.HZP_GetZombieProperties(group.Name);
-                if (zombieProperties != null)
-                {
-                    pawn.VelocityModifier = zombieProperties.Speed;
-                    pawn.VelocityModifierUpdated();
-                }
-                if (group.DeathRefresh)
-                {
-                    state.CooldownEndTime = _core.Engine.GlobalVars.CurrentTime;
-                }
+                _globals.PlayerSkillStates.Remove(playerId);
             }
-
-            _helpers.ResetProgressBar(pawn);
-
-            state.IsBerserkActive = false;
-            state.IsIdleSoundRunning = false;
         }
         else if (group != null && group.DeathRefresh)
         {
-            state.CooldownEndTime = _core.Engine.GlobalVars.CurrentTime;
+            _helpers.ResetPlayerSkillState(playerId, resetCooldown: true);
+            _globals.PlayerSkillStates.Remove(playerId);
+        }
+        else
+        {
+            _helpers.CancelCooldownTimer(playerId);
         }
 
         return HookResult.Continue;
@@ -189,11 +176,17 @@ public class HZP_ZombieSkill_Berserk_Service
             if (!_globals.PlayerSkillStates.TryGetValue(playerId, out var state))
                 continue;
 
+            if (!_zpApi.HZP_IsZombie(playerId))
+            {
+                _helpers.ResetPlayerSkill(player);
+                _globals.PlayerSkillStates.Remove(playerId);
+                continue;
+            }
+
             if (state.IsBerserkActive && currentTime >= state.SkillEndTime)
             {
-                _helpers.ResetProgressBar(pawn);
-                state.IsBerserkActive = false;
-                state.IsIdleSoundRunning = false;
+                _helpers.ResetPlayerSkill(player, resetCooldown: false, showEndMessage: true, cancelCooldownTimer: false);
+                continue;
             }
 
             var zombieClassName = _zpApi.HZP_GetZombieClassname(player);

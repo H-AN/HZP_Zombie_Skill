@@ -74,11 +74,7 @@ public class HZP_ZombieSkill_Berserk_Helpers
                 CheckAndRestoreSkill(player, group);
             });
 
-            if (_globals.SkillCdTimer.TryGetValue(playerId, out var oldTimer))
-            {
-                oldTimer.Cancel();
-                _globals.SkillCdTimer.Remove(playerId);
-            }
+            CancelCooldownTimer(playerId);
 
             var cooldownSeconds = group.Cooldown;
             var cts = new CancellationTokenSource();
@@ -100,17 +96,9 @@ public class HZP_ZombieSkill_Berserk_Helpers
         }
     }
 
-    public void CheckAndRestoreSkill(IPlayer player, ZombieSkillGroup group)
+    public void CheckAndRestoreSkill(IPlayer player, ZombieSkillGroup _)
     {
         if(player == null || !player.IsValid)
-            return;
-
-        var pawn = player.PlayerPawn;
-        if(pawn == null || !pawn.IsValid)
-            return;
-
-        var _zpApi = HZP_ZombieSkill_Berserk._zpApi;
-        if (_zpApi == null)
             return;
 
         var playerId = player.PlayerID;
@@ -121,24 +109,83 @@ public class HZP_ZombieSkill_Berserk_Helpers
         if (!state.IsBerserkActive)
             return;
 
-        if (state.IsBerserkActive && _core.Engine.GlobalVars.CurrentTime >= state.SkillEndTime)
+        if (_core.Engine.GlobalVars.CurrentTime >= state.SkillEndTime)
         {
-            var zombieProperties = _zpApi.HZP_GetZombieProperties(group.Name);
-            if (zombieProperties != null)
+            ResetPlayerSkill(player, resetCooldown: false, showEndMessage: true, cancelCooldownTimer: false);
+        }
+    }
+
+    public void CancelCooldownTimer(int playerId)
+    {
+        if (_globals.SkillCdTimer.TryGetValue(playerId, out var token))
+        {
+            token.Cancel();
+            _globals.SkillCdTimer.Remove(playerId);
+        }
+    }
+
+    public void ResetPlayerSkillState(int playerId, bool resetCooldown = true, bool cancelCooldownTimer = true)
+    {
+        if (cancelCooldownTimer)
+        {
+            CancelCooldownTimer(playerId);
+        }
+
+        if (!_globals.PlayerSkillStates.TryGetValue(playerId, out var state))
+            return;
+
+        var currentTime = _core.Engine.GlobalVars.CurrentTime;
+
+        state.IsBerserkActive = false;
+        state.IsIdleSoundRunning = false;
+        state.SkillEndTime = currentTime;
+        state.LastButtonPressTime = 0f;
+
+        if (resetCooldown)
+        {
+            state.CooldownEndTime = currentTime;
+        }
+    }
+
+    public void ResetPlayerSkill(IPlayer player, bool resetCooldown = true, bool showEndMessage = false, bool cancelCooldownTimer = true)
+    {
+        if (player == null || !player.IsValid)
+            return;
+
+        var playerId = player.PlayerID;
+        var hasState = _globals.PlayerSkillStates.TryGetValue(playerId, out var state);
+        if (!hasState || state == null)
+        {
+            ResetPlayerSkillState(playerId, resetCooldown, cancelCooldownTimer);
+            return;
+        }
+
+        var wasActive = state.IsBerserkActive;
+
+        if (hasState)
+        {
+            var pawn = player.PlayerPawn;
+            if (pawn != null && pawn.IsValid)
             {
-                pawn.VelocityModifier = zombieProperties.Speed;
-                pawn.VelocityModifierUpdated();
-                
-                if (player.Controller != null && player.Controller.IsValid)
+                ResetProgressBar(pawn);
+            }
+
+            var controller = player.Controller;
+            if (controller != null && controller.IsValid)
+            {
+                var originalFov = (uint)state.OriginalFov;
+                if (controller.DesiredFOV != originalFov)
                 {
-                    player.Controller.DesiredFOV = (uint)state.OriginalFov;
-                    player.Controller.DesiredFOVUpdated();
+                    controller.DesiredFOV = originalFov;
+                    controller.DesiredFOVUpdated();
                 }
             }
-            
-            ResetProgressBar(pawn);
-            
-            state.IsBerserkActive = false;
+        }
+
+        ResetPlayerSkillState(playerId, resetCooldown, cancelCooldownTimer);
+
+        if (showEndMessage && wasActive)
+        {
             player.SendCenter(T(player, "BerserkSkillEnded"));
         }
     }
