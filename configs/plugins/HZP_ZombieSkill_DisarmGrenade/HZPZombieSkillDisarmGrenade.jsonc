@@ -1,0 +1,17 @@
+{
+  "HZPZombieSkillDisarmGrenadeCFG": {
+    "Groups": [
+      {
+        "Enable": true,
+        "DeathRefresh": true,
+        "ReplaceGrenadeSlot": true,
+        "Name": "红骷髅",
+        "Cooldown": 24.0,
+        "WeaponCustomName": "zombie_disarm_grenade",
+        "SoundGive": "",
+        "SoundHit": "",
+        "PrecacheSound": ""
+      }
+    ]
+  }
+}

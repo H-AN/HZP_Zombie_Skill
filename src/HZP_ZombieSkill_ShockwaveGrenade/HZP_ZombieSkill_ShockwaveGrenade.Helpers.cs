@@ -304,6 +304,22 @@ public sealed class HZP_ZombieSkill_ShockwaveGrenade_Helpers
         }
     }
 
+    public void DropGrenadeSlot(IPlayer player)
+    {
+        if (player == null || !player.IsValid)
+            return;
+
+        var pawn = player.PlayerPawn;
+        if (pawn == null || !pawn.IsValid)
+            return;
+
+        var weaponServices = pawn.WeaponServices;
+        if (weaponServices == null || !weaponServices.IsValid)
+            return;
+
+        weaponServices.DropWeaponBySlot(gear_slot_t.GEAR_SLOT_GRENADES);
+    }
+
     public void AddPrecacheResources(IOnPrecacheResourceEvent @event, IEnumerable<ShockwaveGrenadeSkillGroup> groups)
     {
         foreach (var group in groups)

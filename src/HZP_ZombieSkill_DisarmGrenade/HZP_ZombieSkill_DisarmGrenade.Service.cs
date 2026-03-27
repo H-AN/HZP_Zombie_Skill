@@ -3,24 +3,23 @@ using SwiftlyS2.Shared;
 using SwiftlyS2.Shared.Events;
 using SwiftlyS2.Shared.GameEventDefinitions;
 using SwiftlyS2.Shared.Misc;
-using SwiftlyS2.Shared.Natives;
 using SwiftlyS2.Shared.Players;
 using SwiftlyS2.Shared.SchemaDefinitions;
 
 namespace HZP_ZombieSkill;
 
-public sealed class HZP_ZombieSkill_ShockwaveGrenade_Service
+public sealed class HZP_ZombieSkill_DisarmGrenade_Service
 {
     private readonly ISwiftlyCore _core;
-    private readonly HZP_ZombieSkill_ShockwaveGrenade_Helpers _helpers;
-    private readonly HZP_ZombieSkill_ShockwaveGrenade_Config _config;
-    private readonly HZP_ZombieSkill_ShockwaveGrenade_Globals _globals;
+    private readonly HZP_ZombieSkill_DisarmGrenade_Helpers _helpers;
+    private readonly HZP_ZombieSkill_DisarmGrenade_Config _config;
+    private readonly HZP_ZombieSkill_DisarmGrenade_Globals _globals;
 
-    public HZP_ZombieSkill_ShockwaveGrenade_Service(
+    public HZP_ZombieSkill_DisarmGrenade_Service(
         ISwiftlyCore core,
-        HZP_ZombieSkill_ShockwaveGrenade_Helpers helpers,
-        IOptions<HZP_ZombieSkill_ShockwaveGrenade_Config> config,
-        HZP_ZombieSkill_ShockwaveGrenade_Globals globals)
+        HZP_ZombieSkill_DisarmGrenade_Helpers helpers,
+        IOptions<HZP_ZombieSkill_DisarmGrenade_Config> config,
+        HZP_ZombieSkill_DisarmGrenade_Globals globals)
     {
         _core = core;
         _helpers = helpers;
@@ -35,6 +34,7 @@ public sealed class HZP_ZombieSkill_ShockwaveGrenade_Service
         _core.Event.OnClientDisconnected += Event_OnClientDisconnected;
         _core.Event.OnMapUnload += Event_OnMapUnload;
         _core.Event.OnEntityCreated += Event_OnEntityCreated;
+        _core.Event.OnEntityTakeDamage += Event_OnEntityTakeDamage;
 
         _core.GameEvent.HookPre<EventPlayerDeath>(OnPlayerDeath);
         _core.GameEvent.HookPost<EventPlayerTeam>(OnPlayerTeam);
@@ -79,7 +79,7 @@ public sealed class HZP_ZombieSkill_ShockwaveGrenade_Service
         var playerId = @event.UserId;
         _core.Scheduler.NextTick(() =>
         {
-            var zpApi = HZP_ZombieSkill_ShockwaveGrenade.ZpApi;
+            var zpApi = HZP_ZombieSkill_DisarmGrenade.ZpApi;
             var player = _core.PlayerManager.GetPlayer(playerId);
             if (player != null && player.IsValid)
             {
@@ -117,18 +117,14 @@ public sealed class HZP_ZombieSkill_ShockwaveGrenade_Service
 
     private HookResult OnDecoyFiring(EventDecoyFiring @event)
     {
-        var position = new Vector(@event.X, @event.Y, @event.Z);
         var entityId = @event.EntityID;
-
-        if (!_helpers.TryHandleShockwaveDetonation(entityId, position))
-            return HookResult.Continue;
-
         var entity = _core.EntitySystem.GetEntityByIndex<CDecoyProjectile>((uint)entityId);
         if (entity != null && entity.IsValid && entity.IsValidEntity)
         {
-            entity.AcceptInput("Kill", 0);
+            _helpers.TryBindDisarmProjectile(entity);
         }
 
+        _helpers.TryHandleProjectileExpiry(entityId);
         return HookResult.Continue;
     }
 
@@ -157,9 +153,17 @@ public sealed class HZP_ZombieSkill_ShockwaveGrenade_Service
         {
             if (entity.IsValid && entity.IsValidEntity)
             {
-                _helpers.TryBindShockwaveProjectile(entity);
+                _helpers.TryBindDisarmProjectile(entity);
             }
         });
+    }
+
+    private void Event_OnEntityTakeDamage(IOnEntityTakeDamageEvent @event)
+    {
+        if (_helpers.TryHandleProjectileDamage(@event.Entity, @event.Info.Inflictor.Value))
+        {
+            @event.Info.Damage = 0.0f;
+        }
     }
 
     private void Event_OnPrecacheResource(IOnPrecacheResourceEvent @event)
@@ -176,7 +180,7 @@ public sealed class HZP_ZombieSkill_ShockwaveGrenade_Service
         if (!player.PressedButtons.HasFlag(GameButtonFlags.R))
             return;
 
-        var zpApi = HZP_ZombieSkill_ShockwaveGrenade.ZpApi;
+        var zpApi = HZP_ZombieSkill_DisarmGrenade.ZpApi;
         if (zpApi == null || !zpApi.HZP_IsZombie(player.PlayerID))
             return;
 
@@ -194,23 +198,23 @@ public sealed class HZP_ZombieSkill_ShockwaveGrenade_Service
 
         if (state.PendingGrenade != null)
         {
-            player.SendCenter(_helpers.T(player, "ShockwaveGrenadeAlreadyOwned"));
+            player.SendCenter(_helpers.T(player, "DisarmGrenadeAlreadyOwned"));
             return;
         }
 
         if (currentTime < state.CooldownEndTime)
         {
             var remaining = Math.Max(0.0f, state.CooldownEndTime - currentTime);
-            player.SendCenter(_helpers.T(player, "ShockwaveGrenadeCooldown", remaining));
+            player.SendCenter(_helpers.T(player, "DisarmGrenadeCooldown", remaining));
             return;
         }
 
-        _helpers.GiveShockwaveGrenade(player, group);
+        _helpers.GiveDisarmGrenade(player, group);
     }
 
-    private ShockwaveGrenadeSkillGroup? GetEnabledGroup(IPlayer player)
+    private DisarmGrenadeSkillGroup? GetEnabledGroup(IPlayer player)
     {
-        var zpApi = HZP_ZombieSkill_ShockwaveGrenade.ZpApi;
+        var zpApi = HZP_ZombieSkill_DisarmGrenade.ZpApi;
         if (zpApi == null)
             return null;
 

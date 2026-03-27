@@ -1,0 +1,9 @@
+{
+  "DisarmGrenadeGranted": "You received a disarm grenade!\nThrow it at a human to force-drop their primary weapon.",
+  "DisarmGrenadeAlreadyOwned": "You are already carrying a disarm grenade!",
+  "DisarmGrenadeCooldown": "Your disarm grenade skill is on cooldown!\nWait {0:F1} seconds.",
+  "DisarmGrenadeReady": "Your disarm grenade skill is ready!",
+  "DisarmGrenadeHitThrower": "Your disarm grenade forced the target to drop their primary weapon!",
+  "DisarmGrenadeHitVictim": "Your primary weapon was forced out of your hands!",
+  "DisarmGrenadeNoPrimaryThrower": "Your disarm grenade hit a human, but they had no primary weapon."
+}
