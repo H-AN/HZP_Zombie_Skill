@@ -1,0 +1,6 @@
+{
+  "ShockwaveGrenadeGranted": "You received a shockwave grenade!\nThrow it to shake and knock back nearby humans.",
+  "ShockwaveGrenadeAlreadyOwned": "You are already carrying a shockwave grenade!",
+  "ShockwaveGrenadeCooldown": "Your shockwave grenade skill is on cooldown!\nWait {0:F1} seconds.",
+  "ShockwaveGrenadeReady": "Your shockwave grenade skill is ready!"
+}

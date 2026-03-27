@@ -1,0 +1,43 @@
+{
+  "HZPZombieSkillShockwaveGrenadeCFG": {
+    "Groups": [
+      {
+        "Enable": true,
+        "DeathRefresh": true,
+        "ReplaceGrenadeSlot": true,
+        "AllowThrowerSelfAffect": true,
+        "Name": "BOMB",
+        "Cooldown": 28.0,
+        "ExplosionRadius": 320.0,
+        "ShakeAmplitude": 30.0,
+        "ShakeFrequency": 80.0,
+        "ShakeDuration": 1.4,
+        "KnockbackHorizontal": 340.0,
+        "KnockbackVertical": 150.0,
+        "UseDistanceFalloff": true,
+        "MinEffectScale": 0.35,
+        "SelfEffectRadius": 180.0,
+        "SelfShakeAmplitude": 0.0,
+        "SelfShakeFrequency": 0.0,
+        "SelfShakeDuration": 0.0,
+        "SelfKnockbackHorizontal": 460.0,
+        "SelfKnockbackVertical": 340.0,
+        "SelfUseDistanceFalloff": true,
+        "SelfMinEffectScale": 0.35,
+        "RingColorR": 40,
+        "RingColorG": 220,
+        "RingColorB": 180,
+        "RingColorA": 180,
+        "RingDuration": 0.35,
+        "RingSegments": 18,
+        "RingThickness": 18.0,
+        "TrailParticle": "particles/environment/de_train/train_coal_dump_trails.vpcf",
+        "ProjectileModel": "weapons/models/grenade/molotov/weapon_molotov.vmdl",
+        "WeaponCustomName": "zombie_Grenade",
+        "SoundGive": "",
+        "SoundExplode": "",
+        "PrecacheSound": ""
+      }
+    ]
+  }
+}
