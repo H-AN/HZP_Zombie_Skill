@@ -1,0 +1,19 @@
+{
+  "HZPZombieSkillDeathExplosionCFG": {
+    "Groups": [
+      {
+        "Enable": true,
+        "Name": "Range",
+        "Damage": 500.0,
+        "Radius": 260.0,
+        "UseDistanceFalloff": true,
+        "MinimumDamageScale": 0.1,
+        "HintCooldown": 1.0,
+        "ExplosionParticle": "particles/explosions_fx/explosion_c4_500.vpcf",
+        "ParticleLifetime": 1.0,
+        "SoundExplode": "",
+        "PrecacheSound": ""
+      }
+    ]
+  }
+}
