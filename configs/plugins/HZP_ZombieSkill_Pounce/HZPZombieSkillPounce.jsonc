@@ -1,0 +1,36 @@
+{
+  "HZPZombieSkillPounceCFG": {
+    "Groups": [
+      {
+        "Enable": true,
+        "DeathRefresh": true,
+        "RequireOnGround": true,
+        "Name": "复仇之神",
+        "Duration": 1.0,
+        "Cooldown": 18.0,
+        "ForwardForce": 1100.0,
+        "VerticalForce": 280.0,
+        "LookUpBonusForce": 220.0,
+        "LiftOffset": 8.0,
+        "SoundStart": "",
+        "SoundEnd": "",
+        "PrecacheSound": ""
+      },
+      {
+        "Enable": true,
+        "DeathRefresh": true,
+        "RequireOnGround": true,
+        "Name": "女警察丧尸",
+        "Duration": 1.0,
+        "Cooldown": 18.0,
+        "ForwardForce": 1100.0,
+        "VerticalForce": 280.0,
+        "LookUpBonusForce": 220.0,
+        "LiftOffset": 8.0,
+        "SoundStart": "",
+        "SoundEnd": "",
+        "PrecacheSound": ""
+      }
+    ]
+  }
+}

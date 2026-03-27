@@ -1,0 +1,8 @@
+{
+  "PounceActive": "Pounce activated!\nLeaping forward for {0:F1} seconds.",
+  "PounceAlreadyActive": "Your pounce skill is already active!",
+  "PounceCooldown": "Your pounce skill is on cooldown!\nWait {0:F1} seconds.",
+  "PounceReady": "Your pounce skill is ready!",
+  "PounceEnded": "Your pounce skill has ended.",
+  "PounceNeedGround": "You need to be on the ground to use pounce."
+}

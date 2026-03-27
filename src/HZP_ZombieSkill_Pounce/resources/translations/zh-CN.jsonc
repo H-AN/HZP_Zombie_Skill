@@ -1,0 +1,8 @@
+{
+  "PounceActive": "飞扑已发动！\n飞扑状态持续 {0:F1} 秒。",
+  "PounceAlreadyActive": "你的飞扑技能仍在生效中！",
+  "PounceCooldown": "你的飞扑技能仍在冷却中！\n还需要等待 {0:F1} 秒。",
+  "PounceReady": "你的飞扑技能已经准备就绪！",
+  "PounceEnded": "你的飞扑技能效果已结束。",
+  "PounceNeedGround": "你必须站在地面上才能发动飞扑。"
+}
