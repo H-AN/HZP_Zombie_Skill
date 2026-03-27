@@ -1,0 +1,7 @@
+{
+  "DamageReductionActive": "Damage reduction is active!\nFor {0:F1} seconds, incoming damage is reduced by {1:F0}%.",
+  "DamageReductionAlreadyActive": "Your damage reduction skill is already active!",
+  "DamageReductionCooldown": "Your damage reduction skill is on cooldown!\nWait {0:F1} seconds.",
+  "DamageReductionReady": "Your damage reduction skill is ready!",
+  "DamageReductionEnded": "Your damage reduction skill has ended."
+}

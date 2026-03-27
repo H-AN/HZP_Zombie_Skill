@@ -1,0 +1,28 @@
+{
+  "HZPZombieSkillDamageReductionCFG": {
+    "Groups": [
+      {
+        "Enable": true,
+        "DeathRefresh": true,
+        "Name": "胖子",
+        "Duration": 10.0,
+        "Cooldown": 25.0,
+        "DamageTakenScale": 0.5,
+        "SoundStart": "",
+        "SoundEnd": "",
+        "PrecacheSound": ""
+      },
+      {
+        "Enable": true,
+        "DeathRefresh": true,
+        "Name": "屠夫胖子",
+        "Duration": 15.0,
+        "Cooldown": 25.0,
+        "DamageTakenScale": 0.1,
+        "SoundStart": "",
+        "SoundEnd": "",
+        "PrecacheSound": ""
+      }
+    ]
+  }
+}

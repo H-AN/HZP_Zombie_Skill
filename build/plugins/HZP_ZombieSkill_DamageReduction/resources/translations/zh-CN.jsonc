@@ -1,0 +1,7 @@
+{
+  "DamageReductionActive": "伤害减免已启动！\n持续 {0:F1} 秒，受到的伤害降低 {1:F0}%",
+  "DamageReductionAlreadyActive": "你的伤害减免技能仍在生效中！",
+  "DamageReductionCooldown": "你的伤害减免技能仍在冷却中！\n还需等待 {0:F1} 秒",
+  "DamageReductionReady": "你的伤害减免技能已经准备就绪！",
+  "DamageReductionEnded": "你的伤害减免技能效果已结束。"
+}
