@@ -1,0 +1,8 @@
+{
+  "TongueGrabActive": "Tongue grab connected to {1}!\nDragging for {0:F1} seconds.",
+  "TongueGrabAlreadyActive": "Your tongue grab is already active!",
+  "TongueGrabCooldown": "Your tongue grab is on cooldown!\nWait {0:F1} seconds.",
+  "TongueGrabMissed": "You did not hit any target.\nSkill entered cooldown for {0:F1} seconds.",
+  "TongueGrabReady": "Your tongue grab is ready!",
+  "TongueGrabEnded": "Your tongue grab has ended."
+}

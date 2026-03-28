@@ -1,0 +1,39 @@
+{
+  "HZPZombieSkillTongueGrabCFG": {
+    "Groups": [
+      {
+        "Enable": true,
+        "DeathRefresh": true,
+        "Name": "frozen",
+        "Duration": 5,
+        "Cooldown": 10.0,
+        "MaxGrabDistance": 1000.0,
+        "PullSpeed": 700.0,
+        "PullStopDistance": 72.0,
+        "PullMinUpwardVelocity": 110.0,
+        "PullVerticalScale": 0.35,
+        "TargetLockMinDot": 0.985,
+        "TargetLockMaxDistanceFromRay": 24.0,
+        "EndSkillWhenTargetClose": true,
+        "EndSkillWhenTargetCloseDistance": 80.0,
+        "ImmobilizeCasterWhileActive": true,
+        "MissBeamDuration": 0.12,
+        "PullAnchorZOffset": 0.0,
+        "BeamSourceZOffset": 0.0,
+        "BeamTargetZOffset": 38.0,
+        "BeamColorR": 100,
+        "BeamColorG": 255,
+        "BeamColorB": 120,
+        "BeamColorA": 220,
+        "BeamWidth": 3.0,
+        "BeamHaloScale": 3.0,
+        "StopTargetVelocityOnRelease": true,
+        "SoundStart": "",
+        "SoundEnd": "",
+        "SoundMiss": "",
+        "PrecacheSound": ""
+      }
+
+    ]
+  }
+}

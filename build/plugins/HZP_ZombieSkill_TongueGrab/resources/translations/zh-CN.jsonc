@@ -1,0 +1,8 @@
+{
+  "TongueGrabActive": "舌钩命中 {1}！\n持续拉拽 {0:F1} 秒。",
+  "TongueGrabAlreadyActive": "你的舌钩技能仍在生效中！",
+  "TongueGrabCooldown": "你的舌钩技能正在冷却中！\n还需等待 {0:F1} 秒。",
+  "TongueGrabMissed": "没有命中任何目标，技能已进入冷却！\n请等待 {0:F1} 秒。",
+  "TongueGrabReady": "你的舌钩技能已经准备就绪！",
+  "TongueGrabEnded": "你的舌钩技能效果已结束。"
+}
