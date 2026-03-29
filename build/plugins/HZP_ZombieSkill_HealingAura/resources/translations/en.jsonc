@@ -1,0 +1,6 @@
+{
+    "HealingAuraSuccess": "Healing Aura activated!\nHealed {0} targets, total {1:F0} HP restored",
+    "HealingAuraNoTarget": "Healing Aura activated!\nNo zombies need healing in range",
+    "HealingAuraCooldown": "Healing Aura is on cooldown!\nWait {0:F1} seconds",
+    "HealingAuraReady": "Your Healing Aura is ready!"
+}

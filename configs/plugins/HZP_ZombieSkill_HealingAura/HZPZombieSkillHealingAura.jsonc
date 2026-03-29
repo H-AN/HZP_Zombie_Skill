@@ -1,0 +1,25 @@
+{
+  "HZPZombieSkillHealingAuraCFG": {
+    "Groups": [
+      {
+        "Enable": true,
+        "Name": "白骷髅",
+        "DeathRefresh": true,
+        "Cooldown": 10.0,
+        "HealAmount": 500.0,
+        "Radius": 300.0,
+        "SoundStart": "han.human.skill.skillheal",
+        "PrecacheSound": "soundevents/hanzbplayerskill.vsndevts",
+        "RingColorR": 0,
+        "RingColorG": 255,
+        "RingColorB": 0,
+        "RingColorA": 255,
+        "RingDuration": 1.0,
+        "RingSegments": 32,
+        "RingThickness": 3.0,
+        "TargetParticleEffect": "particles/stk_sentryguns/dispenser_heal_effect.vpcf",
+        "TargetParticleLifetime": 1.0
+      }
+    ]
+  }
+}

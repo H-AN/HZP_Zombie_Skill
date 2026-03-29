@@ -1,0 +1,6 @@
+{
+    "HealingAuraSuccess": "治疗光环生效!\n治疗了 {0} 个目标, 共回复 {1:F0} 点生命值",
+    "HealingAuraNoTarget": "治疗光环生效!\n范围内没有需要治疗的丧尸",
+    "HealingAuraCooldown": "治疗光环还在冷却中!\n还需等待 {0:F1} 秒",
+    "HealingAuraReady": "你的治疗光环已经准备好了!"
+}
