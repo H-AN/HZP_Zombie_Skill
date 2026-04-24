@@ -143,7 +143,4 @@ If the main plugin does not expose the `HanZombiePlague` shared interface correc
 - add admin/debug commands or permission checks
 - create mode-specific parameter presets for different zombie events
 
----
 
-This repository is designed as a skill extension layer on top of `HanZombiePlagueS2`.  
-If your main zombie mode plugin is already finished, this pack can serve as the modular skill layer for class differentiation.

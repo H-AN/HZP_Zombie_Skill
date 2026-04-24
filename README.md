@@ -141,7 +141,4 @@ dotnet build src/HZP_ZombieSkill_TongueGrab/HZP_ZombieSkill_TongueGrab.csproj
 - 增加管理命令、调试日志或更细的权限控制
 - 为不同模式做单独的技能参数配置
 
----
 
-本仓库定位为 `HanZombiePlagueS2` 的技能扩展层。  
-如果你已经完成主玩法插件，这套技能仓库可以直接作为职业差异化玩法的补充模块来维护。
