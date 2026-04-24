@@ -1,3 +1,4 @@
+<div align="center"><h1><img width="600" height="131" alt="68747470733a2f2f70616e2e73616d7979632e6465762f732f56596d4d5845" src="https://github.com/user-attachments/assets/d0316faa-c2d0-478f-a642-1e3c3651f1d4" /></h1></div>
 <div align="center">
   <h1>HZP Zombie Skill Pack</h1>
   <p><strong>A CS2 zombie skill collection built for SwiftlyS2 and the HanZombiePlague API</strong></p>
@@ -8,6 +9,18 @@
 
 [![cn](https://flagcdn.com/48x36/cn.png) 中文版](./README.md)
 [![en](https://flagcdn.com/48x36/gb.png) English](./README.en.md)
+
+---
+
+---
+
+如果你喜欢这个插件,可以用以下方式支持我,感谢!
+
+If you like this plugin, you can support me in the following ways. Thank you!
+
+[![ko-fi](https://github.com/user-attachments/assets/3c01a28f-efe2-48af-9385-cef3a99fbb8c)](https://www.ifdian.net/a/XMHHAN)
+[![paypal](https://github.com/user-attachments/assets/da293573-12c8-40bc-b956-d562cd46d4ae)](https://www.paypal.com/paypalme/XMHHAN)
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z31PY52N)
 
 ---
 
