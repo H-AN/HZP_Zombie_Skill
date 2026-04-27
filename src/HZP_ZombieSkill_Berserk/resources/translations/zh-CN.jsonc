@@ -1,5 +1,6 @@
 {
     "BerserkSkillActive": "你开启了暴走技能!\n持续 {0} 秒, 倍率 {1}",
+    "BerserkSkillAlreadyActive": "你的暴走技能仍在生效中！",
     "BerserkSkillReady": "你的暴走技能已经准备好了！",
     "BerserkSkillEnded": "你的暴走技能已结束！",
     "BerserkSkillCooldown": "你的暴走技能还在冷却中！\n还需等待 {0:F1} 秒"

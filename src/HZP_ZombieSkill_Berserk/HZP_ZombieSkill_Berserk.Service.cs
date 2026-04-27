@@ -266,7 +266,7 @@ public class HZP_ZombieSkill_Berserk_Service
 
         if (state.IsBerserkActive)
         {
-            player.SendCenter(_helpers.T(player, "BerserkSkillActive"));
+            player.SendCenter(_helpers.T(player, "BerserkSkillAlreadyActive"));
             return;
         }
 
